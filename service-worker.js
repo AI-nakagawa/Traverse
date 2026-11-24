@@ -34,7 +34,13 @@ self.addEventListener("activate", event => {
       .then(cacheNames =>
         Promise.all(
           cacheNames
-            .filter(cacheName => cacheName !== CACHE_NAME)
+            // 同じ github.io の他アプリのキャッシュは消さない（このアプリの古い版だけ削除）
+            .filter(
+              cacheName =>
+                cacheName !== CACHE_NAME &&
+                (cacheName.startsWith("coordinate-note-") ||
+                  cacheName.startsWith("traverse-note-"))
+            )
             .map(cacheName => caches.delete(cacheName))
         )
       )
